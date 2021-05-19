@@ -1,0 +1,36 @@
+import sdk from "@api/sdk";
+const serverInfo = <%-JSON.stringify(webapiGroup.serverInfo) %>;
+const controllerName = "<%-webapiGroup.name %>";
+
+<% webapiGroup.apis.forEach(apiItem=>{ %>
+
+/**
+*
+* <%=apiItem.comment%>
+*
+*/
+async function <%=apiItem.tplGetMethodName()%>(
+<%- apiItem.tplGetRequestParamContent() %>
+):Promise< <%= apiItem.tplGetResponseInterfaceName() %>> {
+
+  const result = await sdk.<%=apiItem.tplGetMethodType()%>
+  <%-apiItem.responseSchema? "<"+Util.getTypeNameFromSchema(apiItem.responseSchema) +">":""%>(
+  <%-apiItem.tplGetUrl()%>,
+  <%-apiItem.tplGetBodyParam()%> ,
+  <%-apiItem.tplGetQueryParam()%>,
+  {serverInfo,controllerName}
+  );
+  return result.data;
+  }
+  <% }) %>
+
+
+  export default {
+  <% webapiGroup.apis.forEach(apiItem=>{ %>
+  <%=apiItem.tplGetMethodName()%>,
+  <% }) %>
+  };
+
+
+
+  <%-tsDefinded%>
