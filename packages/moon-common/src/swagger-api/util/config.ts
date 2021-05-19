@@ -3,7 +3,7 @@
  *
  * @使用场景
  *
- * @coder.yang2010@gmail.com
+ 
  * @Date    2020/3/8
  **/
 // import {IMoonConfig} from "moon-core/declarations/typings/config";

@@ -6,7 +6,7 @@ import Method from "./method";
  *
  * @使用场景
  *
- * @coder.yang2010@gmail.com
+ 
  * @Date    2020/5/12
  **/
 

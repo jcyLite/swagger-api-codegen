@@ -8,7 +8,7 @@ import {IGenPageContext} from "moon-common/declarations/page/pc";
  *
  * @使用场景
  *
- * @coder.yang2010@gmail.com
+ 
  * @Date    2020/3/9
  **/
 export function apply(hook: any) {

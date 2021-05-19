@@ -5,7 +5,7 @@
  *
  * @使用场景
  *
- * @coder.yang2010@gmail.com
+ 
  * @Date    2020/3/24
  **/
 import { genApi } from "./index";

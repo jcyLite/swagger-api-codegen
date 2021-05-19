@@ -3,7 +3,7 @@
  *
  * @使用场景
  *
- * @coder.yang2010@gmail.com
+ 
  * @Date    2019/12/1
  **/
 import {insertContent} from '../compile-util';

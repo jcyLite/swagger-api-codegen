@@ -7,7 +7,7 @@ import type PageModel from "moon-common/declarations/page/model/page-model";
  *
  * @使用场景
  *
- * @coder.yang2010@gmail.com
+ 
  * @Date    2020/4/20
  **/
 

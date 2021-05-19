@@ -7,7 +7,7 @@ import MethodModel from './method-model';
  *
  * @使用场景
  *
- * @coder.yang2010@gmail.com
+ 
  * @Date    2020/3/14
  **/
 
