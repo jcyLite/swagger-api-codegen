@@ -1,7 +1,3 @@
 node_modules
-dist
 declarations
-.idea
 lib
-build
-**/moon-plugins/**.js
