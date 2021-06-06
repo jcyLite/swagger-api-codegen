@@ -30,9 +30,7 @@ const Util = {
       return "post";
     } else if (methodName.toLowerCase() === "export") {
       return "exportF";
-    } else if (methodName.toLowerCase() === "delete") {
-      return "deleteF";
-    } else {
+    }  else {
       return methodName;
     }
   },

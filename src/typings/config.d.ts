@@ -2,6 +2,7 @@ import { IMockConfig } from "./mock";
 export interface IMoonConfig{
     swaggerUrl?: string;
     swaggerUrls?: string[];
+    genFetch?:boolean;
     dir:string;
     plugins?:any[];
     wrapper?:string;

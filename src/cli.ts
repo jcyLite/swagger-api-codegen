@@ -5,7 +5,7 @@
  import { loadMoonConfig } from "./util/config";
  import { IMoonConfig } from "./typings/config";
 import {synchronizeSwagger} from "./mock";
- 
+ import {genFetch} from "./genFetch"
  (async () => {
    let projectPath = process.cwd();
    let config = (await loadMoonConfig()) as IMoonConfig;
@@ -13,6 +13,7 @@ import {synchronizeSwagger} from "./mock";
      workDir: projectPath,
      config: config,
    });
+   await genFetch(config)
    if(config.mock){
     synchronizeSwagger.init({...config.mock,url:config.swaggerUrl}).then((item:any) => {
       console.log('0%')

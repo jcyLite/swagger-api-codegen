@@ -107,9 +107,6 @@ export default class Method {
 
   tplGetMethodType() {
     let methodType = this.methodInfoOptions.method.toLocaleLowerCase();
-    if (methodType === "delete") {
-      return "deleteF";
-    }
     return methodType;
   }
 
@@ -119,9 +116,7 @@ export default class Method {
       return "post";
     } else if (methodName.toLowerCase() === "export") {
       return "exportF";
-    } else if (methodName.toLowerCase() === "delete") {
-      return "deleteF";
-    } else {
+    }  else {
       return methodName;
     }
   }
