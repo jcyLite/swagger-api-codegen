@@ -3,6 +3,7 @@ import { join } from "path";
 import * as fse from "fs-extra";
 import { IMoonConfig ,IBackendConfig} from "../typings/config";
 import * as inquirer from "inquirer"
+import { formatJSON } from "./prettier.common";
 async function createConfig(){
   return await inquirer.prompt([
     {
@@ -39,11 +40,12 @@ export async function loadMoonConfig(
     } else {
       const {wrapper,dir,swaggerUrl} = await createConfig()
       //TODO 
-      // fse.writeFileSync(JSONconfigFilePath,JSON.stringify({
-      //   api:{
-
-      //   }
-      // }))
+      await fse.writeFile(JSONconfigFilePath,formatJSON({
+        api:{
+          swaggerUrl,dir,wrapper
+        }
+      }))
+      return loadMoonConfig(projectDir)
     }
   } catch (err) {
     console.error(err);

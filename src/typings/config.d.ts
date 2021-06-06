@@ -1,19 +1,5 @@
-/**
- * @desc
- *
- * @使用场景
- *
- * @Date    2019/5/31
- **/
+import { IMockConfig } from "./mock";
 export interface IMoonConfig{
-  type:TargetType;
-  // swaggerApi: string;
-  page?:{
-    engine?:string;
-    plugins?:any[];
-    [other: string]: any;
-  },
-  api: {
     swaggerUrl?: string;
     swaggerUrls?: string[];
     dir:string;
@@ -21,16 +7,7 @@ export interface IMoonConfig{
     wrapper?:string;
     exclude?: string[];
     include?: string[];
-    mock?:{
-      isMock?:boolean;
-      ignoreApi:{
-        [controller: string]: string[];
-      };
-      mockApi: {
-        [controller: string]: string[];
-      };
-    }
-  };
+    mock?:IMockConfig
 }
 
 
