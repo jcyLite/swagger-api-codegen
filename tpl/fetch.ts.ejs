@@ -39,7 +39,7 @@ interface IFetch {
   contentType?: string;
 }
 
-async function Common<T = object>(arg: IFetch): Promise<AsyncResult<T>> {
+async function Common<T = object>(arg: IFetch){
   let { host = '', url, data, params, method } = arg;
   let methodUrl = host + url;
   url = methodUrl;
