@@ -67,7 +67,6 @@
      };
    };
  }
- let oldApiIndex: IApiIndex = {};
  
  function isDebug(): boolean {
    return process.env.hasOwnProperty("DEBUG");
@@ -173,21 +172,11 @@
  
    await hookInstance.init.promise(context);
  
-   const ApiIndexPath = join(
-     workBase,
-     defaulltMoonConfig.api.dir,
-     "_api-info.json"
-   );
- 
    let apiGroups = await loadeApiGroup(defaulltMoonConfig.api, hookInstance);
  
    await hookInstance.beforeCompile.call(apiGroups, context);
  
-   try {
-     oldApiIndex = await fse.readJSONSync(ApiIndexPath);
-   } catch (err) {
-     console.warn("读取 历史api索引出错: ", err);
-   }
+
  
    let apiDir = join(workBase, defaulltMoonConfig.api.dir);
  
@@ -315,7 +304,7 @@
      }`
      );
    }
- 
+   
    await MoonCore.CompileUtil.insertFile(apiIndexFilePath, inserts);
    //还是生成 一个总的 ?
    //转换

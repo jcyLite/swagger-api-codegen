@@ -7,7 +7,6 @@ export async function genFetch(config:IMoonConfig){
     return new Promise((resolve)=>{
         if(config.genFetch){
             ejs.renderFile(path.resolve(__dirname,"../tpl/fetch.ts.ejs"),{config},{},(error,res)=>{
-                console.log(res)
                 fse.writeFile(path.resolve(process.cwd(),config.dir,"fetch.ts"),formatTypescript(res))
             })
         }else{
