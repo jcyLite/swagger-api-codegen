@@ -5,9 +5,10 @@
  import { loadMoonConfig } from "./util/config";
  import { IMoonConfig } from "./typings/config";
 import {synchronizeSwagger} from "./mock";
+import * as program  from "commander"
  import {genFetch} from "./genFetch"
- (async () => {
-   let projectPath = process.cwd();
+ async function init(){
+  let projectPath = process.cwd();
    let config = (await loadMoonConfig()) as IMoonConfig;
    await genApi({
      workDir: projectPath,
@@ -26,5 +27,23 @@ import {synchronizeSwagger} from "./mock";
       console.error(err)
     })
    }
+ }
+ (async () => { 
+   let config ;
+    program
+      .version(require("../package.json").version)
+      .option("-init")
+      .action(async (d, otherD,cmd) => {
+        config = (await loadMoonConfig()) as IMoonConfig;
+      })
+      .option("-api")
+      .action(async ()=>{
+        await genApi({
+          workDir: process.cwd(),
+          config: config,
+        });
+      })
+    program.parse(process.argv)
+   
  })();
  

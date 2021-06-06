@@ -11,6 +11,7 @@ export async function genFetch(config:IMoonConfig){
             })
         }else{
             resolve(void 0);
+            
         }
     })
 }
