@@ -26,19 +26,34 @@
  import { IMoonConfig } from "./typings/config";
  import { loadMoonConfig } from "./util/config";
  import { applyHook } from "./util/hook-util";
+ import * as path from "path"
  import ApiGroup from "./core/web-api/client/domain/api-group";
  const log = debug("j2t:cli");
  async function loadJson(swaggerUrl: string): Promise<any> {
    return new Promise((resolve, reject) => {
      console.log(`从${swaggerUrl}中加载api doc信息`);
-     request(swaggerUrl, function (error, response, body) {
-       if (error) {
-         console.error(error);
-         reject(error);
-       } else {
-         resolve(JSON.parse(body));
+     /** 判断是否为http */
+     if(swaggerUrl.indexOf("http://")!=-1||(swaggerUrl.indexOf("https://")!=-1)){
+      request(swaggerUrl, function (error, response, body) {
+        if (error) {
+          console.error(error);
+          reject(error);
+        } else {
+          resolve(JSON.parse(body));
+        }
+      });
+     }else{
+       const isExist = fse.existsSync(path.resolve(process.cwd(),swaggerUrl));
+       if(!isExist){
+         console.error("请检查swaggerUrl地址，如果不包含http或https的话则指向本地文件")
+       }else{
+        fse.readFile(path.resolve(process.cwd(),swaggerUrl),(error,res)=>{
+          resolve(JSON.parse(res.toString()))
+        })
        }
-     });
+      
+     }
+     
    });
  }
  

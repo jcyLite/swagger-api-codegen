@@ -125,18 +125,5 @@ function formatResToMock(path, res, dataLength) {
     return data;
 }
 
-// 将mock数据写入js文件
-
-
-// 初始模版
-function initTemp(path, fileName) {
-    fs.writeFile(`${path}/${fileName}`, '', err => throwErr(err))
-}
-function throwErr(err) {
-    if (err) {
-        console.error('同步失败', err)
-        throw (err)
-    }
-}
 
 export const synchronizeSwagger = new Mocker()

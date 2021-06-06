@@ -23,9 +23,30 @@ async function createConfig(){
       name:"wrapper",
       default:"data",
       message:"请输入返回值的包裹层"
+    },{
+      type:"confirm",
+      name:"isMock",
+      default:false,
+      message:"是否同时生成mock数据"
     }
   ])
 
+}
+async function createMock(){
+  return await inquirer.prompt([
+    {
+      type:"input",
+      name:"dir",
+      default:"mock",
+      message:"请输入mock数据存放的目录"
+    },
+    {
+      type:"input",
+      name:"fileName",
+      default:"index.ts",
+      message:"请输入文件名称"
+    }
+  ])
 }
 export async function loadMoonConfig(
   projectDir = process.cwd()
@@ -38,13 +59,18 @@ export async function loadMoonConfig(
       console.log("读取配置文件", JSONconfigFilePath);
       defaulltMoonConfig = await fse.readJSON(JSONconfigFilePath);
     } else {
-      const {wrapper,dir,swaggerUrl} = await createConfig()
-      //TODO 
-      await fse.writeFile(JSONconfigFilePath,formatJSON({
-        api:{
-          swaggerUrl,dir,wrapper
+      const {wrapper,dir,swaggerUrl,isMock} = await createConfig()
+      const options:IMoonConfig = {
+        swaggerUrl,dir,wrapper
+      }
+      if(isMock){
+        let {dir,fileName} = await createMock()
+        options.mock={
+          dir,fileName
         }
-      }))
+      }
+      
+      await fse.writeFile(JSONconfigFilePath,formatJSON(options))
       return loadMoonConfig(projectDir)
     }
   } catch (err) {
