@@ -33,7 +33,7 @@ class Mocker {
             return ({ state: 'failed' })
         }
     }
-    async writeToMockFile(dir, fileName, content) {
+    async writeToMockFile(dir:string, fileName:string, content:string) {
         // 写入文件
         let temp = '';
         temp += formatTypescript(`
