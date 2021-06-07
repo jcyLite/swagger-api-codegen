@@ -20,7 +20,7 @@
    IWebApiDefinded,
    SchemaProps,
  } from "./typings/api";
- 
+ import * as chalk from "chalk"
  import { IFileSaveOptions } from "./typings/page";
  import { IInsertOption } from "./typings/util";
  import { IMoonConfig } from "./typings/config";
@@ -29,7 +29,9 @@
  import * as path from "path"
  import ApiGroup from "./core/web-api/client/domain/api-group";
  const log = debug("j2t:cli");
- async function loadJson(swaggerUrl: string): Promise<any> {
+
+
+ export async function loadJson(swaggerUrl: string): Promise<any> {
    return new Promise((resolve, reject) => {
      console.log(`从${swaggerUrl}中加载api doc信息`);
      /** 判断是否为http */
@@ -205,13 +207,11 @@
              )
            ) {
              console.log(
-               `${i + 1}/${ilen}`,
-               "current webapiGroup:",
-               webapiGroup.name
+               `${chalk.green("complete")} ${i + 1}/${ilen} current webapiGroup: ${chalk.rgb(0,243,255).bold(webapiGroup.name)}`,
              );
            } else {
              console.log(
-               `${i + 1}/${ilen}`,
+               `${chalk.green("complete")} ${i + 1}/${ilen}`,
                "ignore webapiGroup:",
                webapiGroup.name,
                "due to MoonConfig.api.include"
@@ -219,11 +219,9 @@
              continue;
            }
          } else {
-           console.log(
-             `${i + 1}/${ilen}`,
-             "current webapiGroup:",
-             webapiGroup.name
-           );
+          console.log(
+            `${chalk.green("complete")} ${i + 1}/${ilen} current webapiGroup: ${chalk.rgb(0,243,255).bold(webapiGroup.name)}`,
+          );
          }
        }
  

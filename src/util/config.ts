@@ -48,6 +48,20 @@ async function createMock(){
     }
   ])
 }
+export async function createSwaggerConfig(){
+  const {wrapper,dir,swaggerUrl,isMock} = await createConfig()
+    const options:IMoonConfig = {
+      swaggerUrl,dir,wrapper
+    }
+    if(isMock){
+      let {dir,fileName} = await createMock()
+      options.mock={
+        dir,fileName
+      }
+    }
+    
+    await fse.writeFile(join( process.cwd(),"swaggerConfig.json"),formatJSON(options))
+}
 export async function loadMoonConfig(
   projectDir = process.cwd()
 ): Promise<IMoonConfig | IBackendConfig> {
@@ -59,18 +73,7 @@ export async function loadMoonConfig(
       console.log("读取配置文件", JSONconfigFilePath);
       defaulltMoonConfig = await fse.readJSON(JSONconfigFilePath);
     } else {
-      const {wrapper,dir,swaggerUrl,isMock} = await createConfig()
-      const options:IMoonConfig = {
-        swaggerUrl,dir,wrapper
-      }
-      if(isMock){
-        let {dir,fileName} = await createMock()
-        options.mock={
-          dir,fileName
-        }
-      }
-      
-      await fse.writeFile(JSONconfigFilePath,formatJSON(options))
+      createSwaggerConfig()
       return loadMoonConfig(projectDir)
     }
   } catch (err) {

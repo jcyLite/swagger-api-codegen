@@ -1,10 +1,9 @@
 import { IMockConfig } from "./typings/mock";
 import * as path from "path"
 const swaggerParserMock = require('swagger-parser-mock');
-const fs = require('fs');
 import * as fse from "fs-extra"
-import { is } from "@babel/types";
 import { formatTypescript } from "./util/prettier.common";
+import { parser } from "./util/swagger-parser-mock";
 const mkdirp = require('mkdirp')
 var Mock = require('mockjs')
 class Mocker {
@@ -46,7 +45,8 @@ class Mocker {
     }
     // 解析swagger-api-doc
     async parse() {
-        const { paths } = await swaggerParserMock(this.url)
+        var { paths } = await parser(this.url)
+        
         await this.checkFileExist()
         this.traverse(paths)
         if (!paths) return;
