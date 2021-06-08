@@ -4,6 +4,7 @@ const swaggerParserMock = require('swagger-parser-mock');
 import * as fse from "fs-extra"
 import { formatTypescript } from "./util/prettier.common";
 import { parser } from "./util/swagger-parser-mock";
+import chalk = require("chalk");
 const mkdirp = require('mkdirp')
 var Mock = require('mockjs')
 class Mocker {
@@ -91,7 +92,7 @@ class Mocker {
 
     // 生成mock api模版 
     generateTemplate({ summary, example, method, path }) {
-        console.log(path)
+        console.log(`${chalk.green("complete")} ${path}`)
         // api path中的{petId}形式改为:petId
         const data = formatResToMock(path, example, this.dataLength);
         let str = `true`;

@@ -1,6 +1,6 @@
 import * as URL from "url"
 var memoizee = require('memoizee')
-var swagger = require('swagger-client')
+import swagger from './swagger-client'
 var swaggerTools = require('swagger-tools').specs.v1
 
 var utils = require('swagger-parser-mock/lib/utils')
