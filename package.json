@@ -1,6 +1,6 @@
 {
   "name": "swagger-api-codegen",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "make api and mock easy",
   "main": "lib/index.js",
   "scripts": {

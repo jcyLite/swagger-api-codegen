@@ -24,12 +24,71 @@
  import { IFileSaveOptions } from "./typings/page";
  import { IInsertOption } from "./typings/util";
  import { IConfig } from "./typings/config";
- import { loadMoonConfig } from "./util/config";
+ import { createSwaggerConfig, loadMoonConfig } from "./util/config";
  import { applyHook } from "./util/hook-util";
  import * as path from "path"
+ import * as express from "express"
  import ApiGroup from "./core/web-api/client/domain/api-group";
- const log = debug("j2t:cli");
-
+import { getFreePort } from "./util/getFreePort";
+import { genTpl } from "./util/genTpl";
+import { synchronizeSwagger } from "./mock";
+export class Clis{
+  async v(){
+    return await this.view();
+  }
+  async view(){
+    let config = (await loadMoonConfig()) as IConfig;
+    return ({
+      async api(){
+        const app = express();
+        app.use(express.static(path.resolve(__dirname,'../webview/petstore.swagger.io')))
+        app.get("/v2/api-doc",async (req,res)=>{
+          let data = await loadJson(config.swaggerUrl)
+          res.send(data)
+        })
+        let port = await getFreePort(3333);
+        app.listen(port,()=>{
+          console.log(`${chalk.green(`INFO:`)} the swagger ui run at  http://localhost:${port} successful`)
+        })
+      },
+    })
+  }
+  async g(){
+    return await this.generate();
+  }
+  async generate(){
+    let config = (await loadMoonConfig()) as IConfig;
+    return ({
+      async fetch(){
+        await genTpl(config,"fetch.ts.ejs","fetch.ts")
+      },
+      async api(){
+        await genApi({
+          workDir: process.cwd(),
+          config: {...config.api,swaggerUrl:config.swaggerUrl,swaggerUrls:config.swaggerUrls},
+        });
+      },
+      async serverInfo(){
+        await genTpl(config,"serverInfo.ts.ejs","serverInfo.ts")
+      },
+      async mock(){
+        synchronizeSwagger.init({...config.mock,url:config.swaggerUrl}).then((item:any) => {
+          if (item.state === 'success') {
+            console.log(chalk.green('生成mock成功！'))
+          }
+        }).catch((err:any) => {
+          console.log(chalk.red('生成mock失败！'))
+        })
+      },
+    })
+  }
+  async i(){
+    return this.init();
+  }
+  async init(){
+    createSwaggerConfig()
+  }
+}
 
  export async function loadJson(swaggerUrl: string): Promise<any> {
    return new Promise((resolve, reject) => {
