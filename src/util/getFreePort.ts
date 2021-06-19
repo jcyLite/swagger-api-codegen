@@ -27,7 +27,7 @@ const tryUsePort = async function<T extends number>(port:T, portAvailableCallbac
     }
 }
  
-export function getFreePort(port:number){
+export function getFreePort(port:number):Promise<number>{
     return new Promise((resolve,reject)=>{
         tryUsePort(port,(p)=>{
             resolve(p)

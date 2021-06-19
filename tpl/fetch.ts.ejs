@@ -50,7 +50,7 @@ async function Common<T = object>(arg: IFetch){
   isEmpty(params) || (options.params = params);
   try {
     let res = await request(url, options);
-    return res<%= config.wrapper?(`.${config.wrapper}`):"" %>;
+    return res<%= config.api.wrapper?(`.${config.api.wrapper}`):"" %> as T;
   } catch (e) {
     //@ts-ignore
     window.Raven && window.Raven.captureException(e);

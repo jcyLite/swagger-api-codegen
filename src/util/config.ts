@@ -1,7 +1,7 @@
 
 import { join } from "path";
 import * as fse from "fs-extra";
-import { IMoonConfig ,IBackendConfig} from "../typings/config";
+import { IConfig ,IBackendConfig} from "../typings/config";
 import * as inquirer from "inquirer"
 import { formatJSON } from "./prettier.common";
 import chalk = require("chalk");
@@ -10,7 +10,7 @@ async function createConfig(){
     {
       type: "input",
       name: "swaggerUrl",
-      default:"https://user-api.union8.top/v2/api-docs",
+      default:"https://petstore.swagger.io/v2/swagger.json",
       message: "请输入能够直接获取到swaggerData的url路径"
     },
     {
@@ -51,8 +51,10 @@ async function createMock(){
 }
 export async function createSwaggerConfig(){
   const {wrapper,dir,swaggerUrl,isMock} = await createConfig()
-    const options:IMoonConfig = {
-      swaggerUrl,dir,wrapper
+    const options:IConfig = {
+      swaggerUrl,api:{
+        dir,wrapper
+      }
     }
     if(isMock){
       let {dir,fileName} = await createMock()
@@ -65,8 +67,8 @@ export async function createSwaggerConfig(){
 }
 export async function loadMoonConfig(
   projectDir = process.cwd()
-): Promise<IMoonConfig | IBackendConfig> {
-  let defaulltMoonConfig: IMoonConfig;
+): Promise<IConfig | IBackendConfig> {
+  let defaulltMoonConfig: IConfig;
 
   let JSONconfigFilePath = join(projectDir, "swaggerConfig.json");
   try {

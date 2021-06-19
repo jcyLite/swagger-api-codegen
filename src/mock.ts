@@ -1,11 +1,9 @@
 import { IMockConfig } from "./typings/mock";
 import * as path from "path"
-const swaggerParserMock = require('swagger-parser-mock');
 import * as fse from "fs-extra"
 import { formatTypescript } from "./util/prettier.common";
 import { parser } from "./util/swagger-parser-mock";
 import chalk = require("chalk");
-const mkdirp = require('mkdirp')
 var Mock = require('mockjs')
 class Mocker {
     url="";

@@ -313,17 +313,6 @@ export function transfer(
         continue;
       }
 
-      //检查名字如果重复则添加一个get post等信息;
-      // if (!KeyMap[groupKey].apis.every(methodItem => methodItem.name !== apiDefItem.name)
-      // ) {
-      //   apiDefItem.name =
-      //     apiDefItem.name +
-      //     '_' +
-      //     methodInfo.operationId.substr(
-      //       methodInfo.operationId.indexOf('Using') + 5,
-      //     );
-      // }
-
       apiDefItem.requestParam.map((item) => {
         if (item.schema) {
           addDef2List(

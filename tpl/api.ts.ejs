@@ -1,5 +1,5 @@
 import sdk from "./fetch";
-const serverInfo = <%-JSON.stringify(webapiGroup.serverInfo) %>;
+import serverInfo from "./serverInfo";
 const controllerName = "<%-webapiGroup.name %>";
 
 <% webapiGroup.apis.forEach(apiItem=>{ %>
@@ -18,9 +18,9 @@ async function <%=apiItem.tplGetMethodName()%>(
   <%-apiItem.tplGetUrl()%>,
   <%-apiItem.tplGetBodyParam()%> ,
   <%-apiItem.tplGetQueryParam()%>,
-  {serverInfo,controllerName}
+  {...serverInfo,controllerName}
   );
-  return result.data;
+  return result;
   }
   <% }) %>
 

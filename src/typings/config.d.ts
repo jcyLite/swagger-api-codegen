@@ -1,14 +1,17 @@
 import { IMockConfig } from "./mock";
-export interface IMoonConfig{
+export interface IApiConfig{
+  genFetch?:boolean;
+  dir:string;
+  plugins?:any[];
+  wrapper?:string;
+  exclude?: string[];
+  include?: string[];
+}
+export interface IConfig{
     swaggerUrl?: string;
     swaggerUrls?: string[];
-    genFetch?:boolean;
-    dir:string;
-    plugins?:any[];
-    wrapper?:string;
-    exclude?: string[];
-    include?: string[];
-    mock?:IMockConfig
+    api:IApiConfig;
+    mock?:IMockConfig;
 }
 
 

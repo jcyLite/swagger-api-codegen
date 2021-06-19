@@ -23,7 +23,7 @@
  import * as chalk from "chalk"
  import { IFileSaveOptions } from "./typings/page";
  import { IInsertOption } from "./typings/util";
- import { IMoonConfig } from "./typings/config";
+ import { IConfig } from "./typings/config";
  import { loadMoonConfig } from "./util/config";
  import { applyHook } from "./util/hook-util";
  import * as path from "path"
@@ -59,20 +59,6 @@
    });
  }
  
- interface IApiIndex {
-   [controllerName: string]: {
-     fileName: string;
-     methods: {
-       [methodName: string]: {
-         responseTs: string[];
-       };
-     };
-   };
- }
- 
- function isDebug(): boolean {
-   return process.env.hasOwnProperty("DEBUG");
- }
  
  process.on("unhandledRejection", (error) => {
    console.log("unhandledRejection", error);
@@ -254,14 +240,6 @@
          },
          beforeSave: (options: IFileSaveOptions, context: any) => {
            hookInstance.beforeApiSave.call(options, context);
-           options.content = options.content
-             .replace(
-               /result\.data/gi,
-               defaulltMoonConfig.api.wrapper
-                 ? `result.${defaulltMoonConfig.api.wrapper}`
-                 : "result"
-             );
- 
            return Promise.resolve(options);
          },
        });
