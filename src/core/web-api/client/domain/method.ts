@@ -89,7 +89,7 @@ export default class Method {
   private _responseSchma;
   get responseSchema(): SchemaProps {
     if (!this._responseSchma) {
-      this._responseSchma = this.methodInfo.responses["200"].schema;
+      this._responseSchma = this.methodInfo.responses["200"]?.schema;
       if (this._responseSchma) {
         this._responseSchma.title = toUCamelize(this.name + "Res");
       }

@@ -9,7 +9,7 @@
  import * as fse from "fs-extra";
  import * as _ from "lodash";
  import { join } from "path";
- import MoonCore from "./core";
+ import SwaggerCore from "./core";
  import debug from "debug";
  import * as minimatch from "minimatch";
  
@@ -33,7 +33,7 @@
 
  export async function loadJson(swaggerUrl: string): Promise<any> {
    return new Promise((resolve, reject) => {
-     console.log(`从${swaggerUrl}中加载api doc信息`);
+     console.log(`${chalk.green("正在")} 从${swaggerUrl}中加载api doc信息`);
      /** 判断是否为http */
      if(swaggerUrl.indexOf("http://")!=-1||(swaggerUrl.indexOf("https://")!=-1)){
       request(swaggerUrl, function (error, response, body) {
@@ -104,7 +104,7 @@
  
    if (context.swaggerJson) {
      apiJson = context.swaggerJson;
-     apiGroups = MoonCore.SwaggerUtil.transfer(apiJson, errrorMsgDeal);
+     apiGroups = SwaggerCore.SwaggerUtil.transfer(apiJson, errrorMsgDeal);
      return apiGroups;
    } else {
      if (apiGenConfig.swaggerUrl) {
@@ -113,7 +113,7 @@
        await hookInstance.swagger2ApiGroup.promise(context);
        if (!context["apiGroups"]) {
          //默认转换规则
-         context["apiGroups"] = MoonCore.SwaggerUtil.transfer(
+         context["apiGroups"] = SwaggerCore.SwaggerUtil.transfer(
            apiJson,
            errrorMsgDeal
          );
@@ -132,7 +132,7 @@
              apiGroups = apiGroups.concat(
                context.apiGroups
                  ? context.apiGroups
-                 : MoonCore.SwaggerUtil.transfer(apiJson, errrorMsgDeal)
+                 : SwaggerCore.SwaggerUtil.transfer(apiJson, errrorMsgDeal)
              );
            }
          } catch (err) {
@@ -225,7 +225,7 @@
          }
        }
  
-       let saveApiFile = await MoonCore.WebApiGen.buildWebApi({
+       let saveApiFile = await SwaggerCore.WebApiGen.buildWebApi({
          webapiGroup,
          projectPath: apiDir,
          beforeCompile: (apiItem) => {
@@ -238,7 +238,7 @@
            context: IWebApiContext
          ): Promise<SchemaProps> => {
            //添加生成mock数据的流程;;
-           let finalSchema = MoonCore.SwaggerUtil.resSchemaModify(
+           let finalSchema = SwaggerCore.SwaggerUtil.resSchemaModify(
              schema,
              apiItem,
              context,
@@ -269,7 +269,7 @@
        //@ts-ignore
        hookInstance.afterApiSave.call(saveApiFile, webapiGroup);
  
-       let controllerName = MoonCore.StringUtil.toLCamelize(webapiGroup.name);
+       let controllerName = SwaggerCore.StringUtil.toLCamelize(webapiGroup.name);
        let filePath = `./${webapiGroup.name}`;
  
        inserts.push({
@@ -303,7 +303,7 @@
      );
    }
    
-   await MoonCore.CompileUtil.insertFile(apiIndexFilePath, inserts);
+   await SwaggerCore.CompileUtil.insertFile(apiIndexFilePath, inserts);
    //还是生成 一个总的 ?
    //转换
  

@@ -4,6 +4,7 @@ import * as fse from "fs-extra";
 import { IMoonConfig ,IBackendConfig} from "../typings/config";
 import * as inquirer from "inquirer"
 import { formatJSON } from "./prettier.common";
+import chalk = require("chalk");
 async function createConfig(){
   return await inquirer.prompt([
     {
@@ -70,7 +71,7 @@ export async function loadMoonConfig(
   let JSONconfigFilePath = join(projectDir, "swaggerConfig.json");
   try {
     if (fse.existsSync(JSONconfigFilePath)) {
-      console.log("读取配置文件", JSONconfigFilePath);
+      console.log(chalk.green("正在读取配置文件"), JSONconfigFilePath);
       defaulltMoonConfig = await fse.readJSON(JSONconfigFilePath);
     } else {
       createSwaggerConfig()

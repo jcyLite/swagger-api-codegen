@@ -7,7 +7,6 @@
  *
  **/
 
-import * as ReduxGen  from  './page/redux/redux';
 import * as JsonUtil from  './util/json-util';
 import * as StringUtil from './util/string-util';
 import * as JestUtil from './util/jest-util';
@@ -23,10 +22,6 @@ export const api = {
 }
 
 export default {
-  // api:{
-  //   domain:apiDomain
-  // },
-  ReduxGen,
   JsonUtil,
   StringUtil,
   CompileUtil,
