@@ -1942,7 +1942,7 @@ ee-first@1.1.1, ee-first@~1.1.1:
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
-ejs@^2.6.1, ejs@^2.7.4:
+ejs@^2.6.1:
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.7.4.tgz#48661287573dcc53e366c7a1ae52c3a120eec9ba"
   integrity sha512-7vmuyh5+kuUyJKePhQfRQBhXV5Ce+RnaeeQArKu1EAMpL3WbgMt5WG6uQZpEVvYSSsxMXRKOewtDk9RaTKXRlA==
@@ -4655,27 +4655,6 @@ mockjs@^1.1.0:
   dependencies:
     commander "*"
 
-moon-core@^0.1.1-alpha.0:
-  version "0.1.1-alpha.12"
-  resolved "https://registry.yarnpkg.com/moon-core/-/moon-core-0.1.1-alpha.12.tgz#e2afda0c96d26ec51c12fa97986bb3862054baac"
-  integrity sha512-pGw8jasX6OFTEQ/vOv0Aax5WgEBuLrtugKlIGhwGzarKgywNNKEX/cKMRtRVlT025hYso9WGdbpaLOaXBfc7qA==
-  dependencies:
-    "-" "0.0.1"
-    "@types/lodash" "^4.14.152"
-    "@types/request" "^2.48.1"
-    debug "^4.1.1"
-    ejs "^2.7.4"
-    fs-extra "^8.1.0"
-    generate-schema "^2.6.0"
-    json-schema-faker "^0.5.0-rc17"
-    json-schema-ref-parser "^6.1.0"
-    json-schema-to-typescript "^6.1.3"
-    jsonschema "^1.2.4"
-    klaw "^3.0.0"
-    lodash "^4.17.11"
-    request "^2.88.0"
-    ts-morph "^3.1.3"
-
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
@@ -6627,7 +6606,7 @@ ts-jest@^24.1.0:
     semver "^5.5"
     yargs-parser "10.x"
 
-ts-morph@3.1.3, ts-morph@^3.1.3:
+ts-morph@3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/ts-morph/-/ts-morph-3.1.3.tgz#bbfa1d14481ee23bdd1c030340ccf4a243cfc844"
   integrity sha512-CwjgyJTtd3f8vBi7Vr0IOgdOY6Wi/Tq0MhieXOE2B5ns5WWRD7BwMNHtv+ZufKI/S2U/lMrh+Q3bOauE4tsv2g==

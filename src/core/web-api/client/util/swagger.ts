@@ -3,7 +3,7 @@ import {
   IWebApiContext,
   IWebApiDefinded,
   SchemaProps,
-} from "@/typings/api";
+} from "@/types/api";
 import debug from "debug";
 import { toLCamelize } from "../../../util/string-util";
 import RequestParameter from "../domain/request-parameter";

@@ -5,11 +5,10 @@
  *
  * @Date    2019/5/31
  **/
-import {IFileSaveOptions} from "../page/old/taro-redux/redux-taro";
 import {SchemaProps} from "./api";
-import {IAction, IActorItem, ISubComp} from "./page";
+import {IAction, IActorItem, IFileSaveOptions, ISubComp} from "./page";
 
-interface IHandlePageParam {
+export interface IHandlePageParam {
   saveFilePath: string;
   subComp?: ISubComp;
   actor?: IActorItem;
@@ -40,13 +39,13 @@ export interface IInsertOption {
   check?: (content, rawContent) => boolean;
 }
 
-interface IJsonTsGenResult extends ITsGenResult {
+export interface IJsonTsGenResult extends ITsGenResult {
   typeName: string;
   tsContent: string;
   schema: SchemaProps;
 }
 
-interface ITsGenResult {
+export interface ITsGenResult {
   typeName: string;
   tsContent: string
 }

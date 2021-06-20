@@ -1,8 +1,8 @@
 
 import { join } from "path";
 import * as fse from "fs-extra";
-import { IConfig ,IBackendConfig} from "../typings/config";
-import * as inquirer from "inquirer"
+import { IConfig ,IBackendConfig} from "../types/config";
+import * as inquirer from "inquirer";
 import { formatJSON } from "./prettier.common";
 import chalk = require("chalk");
 async function createConfig(){
@@ -30,7 +30,7 @@ async function createConfig(){
       default:false,
       message:"是否同时生成mock数据"
     }
-  ])
+  ]);
 
 }
 async function createMock(){
@@ -47,23 +47,23 @@ async function createMock(){
       default:"index.ts",
       message:"请输入文件名称"
     }
-  ])
+  ]);
 }
 export async function createSwaggerConfig(){
-  const {wrapper,dir,swaggerUrl,isMock} = await createConfig()
+  const {wrapper,dir,swaggerUrl,isMock} = await createConfig();
     const options:IConfig = {
       swaggerUrl,api:{
         dir,wrapper
       }
-    }
+    };
     if(isMock){
-      let {dir,fileName} = await createMock()
+      let {dir,fileName} = await createMock();
       options.mock={
         dir,fileName
-      }
+      };
     }
     
-    await fse.writeFile(join( process.cwd(),"swaggerConfig.json"),formatJSON(options))
+    await fse.writeFile(join( process.cwd(),"swaggerConfig.json"),formatJSON(options));
 }
 export async function loadMoonConfig(
   projectDir = process.cwd()
@@ -76,8 +76,8 @@ export async function loadMoonConfig(
       console.log(chalk.green("正在读取配置文件"), JSONconfigFilePath);
       defaulltMoonConfig = await fse.readJSON(JSONconfigFilePath);
     } else {
-      createSwaggerConfig()
-      return loadMoonConfig(projectDir)
+      createSwaggerConfig();
+      return loadMoonConfig(projectDir);
     }
   } catch (err) {
     console.error(err);

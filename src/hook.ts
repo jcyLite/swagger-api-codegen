@@ -2,8 +2,8 @@ import { AsyncSeriesHook, AsyncSeriesWaterfallHook, SyncHook } from "tapable";
 
 import {
   IWebApiDefinded,
-} from "./typings/api";
-import { IFileSaveOptions } from "./typings/page";
+} from "./types/api";
+import { IFileSaveOptions } from "./types/page";
 import { IGenApiConfig } from "./index";
 import ApiGroup from "./core/web-api/client/domain/api-group";
 

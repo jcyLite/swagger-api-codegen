@@ -1,4 +1,4 @@
-import { IMockConfig } from "./typings/mock";
+import { IMockConfig } from "./types/mock";
 import * as path from "path"
 import * as fse from "fs-extra"
 import { formatTypescript } from "./util/prettier.common";
@@ -15,7 +15,8 @@ class Mocker {
     content = ""
     fileName = "index.ts"
     prefix = "/"
-    async init({ url, exclude = [], dir = 'mock', dataLength = '1-8', fileName = 'index.ts', include = [], prefix = "/" }: IMockConfig) {
+    async init({ url, exclude = [], workDir,dir = 'mock', dataLength = '1-8', fileName = 'index.ts', include = [], prefix = "/" }: IMockConfig) {
+        this.cwd = workDir;
         this.url = url;
         this.exclude = exclude;
         this.include = include;

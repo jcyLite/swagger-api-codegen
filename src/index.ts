@@ -10,7 +10,6 @@
  import * as _ from "lodash";
  import { join } from "path";
  import SwaggerCore from "./core";
- import debug from "debug";
  import * as minimatch from "minimatch";
  
  import ApiCompileHooks from "./hook";
@@ -19,11 +18,11 @@
    IWebApiContext,
    IWebApiDefinded,
    SchemaProps,
- } from "./typings/api";
+ } from "./types/api";
  import * as chalk from "chalk"
- import { IFileSaveOptions } from "./typings/page";
- import { IInsertOption } from "./typings/util";
- import { IConfig } from "./typings/config";
+ import { IFileSaveOptions } from "./types/page";
+ import { IInsertOption } from "./types/util";
+ import { IConfig } from "./types/config";
  import { createSwaggerConfig, loadMoonConfig } from "./util/config";
  import { applyHook } from "./util/hook-util";
  import * as path from "path"
@@ -33,22 +32,32 @@ import { getFreePort } from "./util/getFreePort";
 import { genTpl } from "./util/genTpl";
 import { synchronizeSwagger } from "./mock";
 export class Clis{
+  workDir = process.cwd();
+  public config:IConfig = null;
+  constructor(workDir?:string){
+    workDir&&(this.workDir = workDir);
+  }
   async v(){
     return await this.view();
   }
   async view(){
-    let config = (await loadMoonConfig()) as IConfig;
+    const _this = this;
+    let config = (await loadMoonConfig(this.workDir)) as IConfig;
+    this.config = config;
     return ({
-      async api(){
-        const app = express();
-        app.use(express.static(path.resolve(__dirname,'../webview/petstore.swagger.io')))
-        app.get("/v2/api-doc",async (req,res)=>{
-          let data = await loadJson(config.swaggerUrl)
-          res.send(data)
-        })
-        let port = await getFreePort(3333);
-        app.listen(port,()=>{
-          console.log(`${chalk.green(`INFO:`)} the swagger ui run at  http://localhost:${port} successful`)
+      api(){
+        return new Promise(async (resolve)=>{
+          const app = express();
+          app.use(express.static(path.resolve(__dirname,'../webview/petstore.swagger.io')))
+          app.get("/v2/api-doc",async (req,res)=>{
+            let data = await loadJson(config.swaggerUrl,_this.workDir)
+            res.send(data)
+          })
+          let port = await getFreePort(3333);
+          app.listen(port,()=>{
+            console.log(`${chalk.green(`INFO:`)} the swagger ui run at  http://localhost:${port} successful`)
+            resolve(`http://localhost:${port}`)
+          })
         })
       },
     })
@@ -57,22 +66,24 @@ export class Clis{
     return await this.generate();
   }
   async generate(){
-    let config = (await loadMoonConfig()) as IConfig;
+    let _this = this;
+    let config = (await loadMoonConfig(this.workDir)) as IConfig;
+    this.config = config;
     return ({
       async fetch(){
-        await genTpl(config,"fetch.ts.ejs","fetch.ts")
+        await genTpl(config,"fetch.ts.ejs","fetch.ts", _this.workDir)
       },
       async api(){
         await genApi({
-          workDir: process.cwd(),
+          workDir: _this.workDir,
           config: {...config.api,swaggerUrl:config.swaggerUrl,swaggerUrls:config.swaggerUrls},
         });
       },
       async serverInfo(){
-        await genTpl(config,"serverInfo.ts.ejs","serverInfo.ts")
+        await genTpl(config,"serverInfo.ts.ejs","serverInfo.ts", _this.workDir)
       },
       async mock(){
-        synchronizeSwagger.init({...config.mock,url:config.swaggerUrl}).then((item:any) => {
+        synchronizeSwagger.init({...config.mock,url:config.swaggerUrl,workDir:_this.workDir}).then((item:any) => {
           if (item.state === 'success') {
             console.log(chalk.green('生成mock成功！'))
           }
@@ -90,7 +101,7 @@ export class Clis{
   }
 }
 
- export async function loadJson(swaggerUrl: string): Promise<any> {
+ export async function loadJson(swaggerUrl: string,workDir:string): Promise<any> {
    return new Promise((resolve, reject) => {
      console.log(`${chalk.green("正在")} 从${swaggerUrl}中加载api doc信息`);
      /** 判断是否为http */
@@ -104,11 +115,11 @@ export class Clis{
         }
       });
      }else{
-       const isExist = fse.existsSync(path.resolve(process.cwd(),swaggerUrl));
+       const isExist = fse.existsSync(path.resolve(workDir,swaggerUrl));
        if(!isExist){
          console.error("请检查swaggerUrl地址，如果不包含http或https的话则指向本地文件")
        }else{
-        fse.readFile(path.resolve(process.cwd(),swaggerUrl),(error,res)=>{
+        fse.readFile(path.resolve(workDir,swaggerUrl),(error,res)=>{
           resolve(JSON.parse(res.toString()))
         })
        }
@@ -125,7 +136,8 @@ export class Clis{
  
  async function loadeApiGroup(
    apiGenConfig: IGenApiConfig,
-   hookInstance: ApiCompileHooks
+   hookInstance: ApiCompileHooks,
+   workDir:string
  ): Promise<ApiGroup[]> {
    let apiGroups: ApiGroup[] = [];
  
@@ -153,7 +165,7 @@ export class Clis{
      return apiGroups;
    } else {
      if (apiGenConfig.swaggerUrl) {
-       let apiJson = await loadJson(apiGenConfig.swaggerUrl);
+       let apiJson = await loadJson(apiGenConfig.swaggerUrl,workDir);
        context.swaggerJson = apiJson;
        await hookInstance.swagger2ApiGroup.promise(context);
        if (!context["apiGroups"]) {
@@ -168,7 +180,7 @@ export class Clis{
        for (let i = 0, iLen = apiGenConfig.swaggerUrls.length; i < iLen; i++) {
          let swaggerUrl = apiGenConfig.swaggerUrls[i];
          try {
-           let apiJson = await loadJson(swaggerUrl);
+           let apiJson = await loadJson(swaggerUrl,workDir);
            context.swaggerJson = apiJson;
            context.apiGroups = null;
            await hookInstance.swagger2ApiGroup.promise(context);
@@ -219,7 +231,7 @@ export class Clis{
  
    await hookInstance.init.promise(context);
  
-   let apiGroups = await loadeApiGroup(defaulltMoonConfig.api, hookInstance);
+   let apiGroups = await loadeApiGroup(defaulltMoonConfig.api, hookInstance,context.workDir);
  
    await hookInstance.beforeCompile.call(apiGroups, context);
  

@@ -8,9 +8,9 @@
 import { join, parse } from "path";
 import * as fse from "fs-extra";
 import * as prettier from "prettier";
-import { IHandleFile, IHandlePageParam, IInsertOption } from "@/typings/util";
+import { IHandleFile, IHandlePageParam, IInsertOption } from "@/types/util";
 import debug from "debug";
-import { IFileSaveOptions } from "@/typings/page";
+import { IFileSaveOptions } from "@/types/page";
 
 const log = debug("moon:core:compile-util");
 /**

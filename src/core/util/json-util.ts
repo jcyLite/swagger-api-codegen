@@ -8,8 +8,8 @@
 
 import * as generateSchema from "generate-schema";
 import { compile } from "json-schema-to-typescript";
-import { IWebApiContext } from "@/typings/api";
-import { IJsonTsGenResult, ITsGenResult } from "@/typings/util";
+import { IWebApiContext } from "@/types/api";
+import { IJsonTsGenResult, ITsGenResult } from "@/types/util";
 
 import debug from "debug";
 

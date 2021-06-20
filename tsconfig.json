@@ -6,10 +6,11 @@
     "rootDir": "./src",
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
+    "baseUrl": "./",
     "outDir": "./lib",
     "paths": {
-      "@/*": ["./src/*"],
-      "%/*":["./*"]
+      "@/*": ["src/*"],
+      "%/*":["*"]
     },
     "declarationDir": "./declarations",
     "declaration": true

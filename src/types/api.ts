@@ -6,9 +6,9 @@
  * @Date    2019/5/31
  **/
 import { IFileSaveOpt } from "./util";
-import RequestParameter from "../web-api/client/domain/request-parameter";
-import { ApiGroup } from "../web-api/client/domain";
-import Method from "../web-api/client/domain/method";
+import RequestParameter from "../core/web-api/client/domain/request-parameter";
+import { ApiGroup } from "../core/web-api/client/domain";
+import Method from "../core/web-api/client/domain/method";
 
 /**
  * 对于接口的定义
@@ -49,7 +49,7 @@ interface INumberValidates {
   maximum?: number;
 }
 
-interface IJSIntegerProps extends IJsonSchemaProps, INumberValidates {
+interface IJsonIntegerProps extends IJsonSchemaProps, INumberValidates {
   type: "integer";
 }
 
@@ -85,11 +85,11 @@ export interface IJSObjectProps extends IJsonSchemaProps {
 }
 
 export type SchemaProps =
-  | IJSObjectProps
+    IJSObjectProps
   | IJSArrayProps
   | JSStringProps
   | IJSNumberProps
-  | IJSIntegerProps
+  | IJsonIntegerProps
   | IJsonSchemaRef;
 
 export interface IJsonSchemaRef extends IJsonSchemaProps {

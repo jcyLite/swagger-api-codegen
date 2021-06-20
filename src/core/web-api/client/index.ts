@@ -11,8 +11,8 @@ import { join } from "path";
 import { getHandleFile } from "../../util/compile-util";
 import * as stringUtil from "../../util/string-util";
 import { genTsFromDefines } from "../../util/json-util";
-import { IParamShape } from "@/typings/api";
-import { IWebApiContext, IWebApiDefinded } from "@/typings/api";
+import { IParamShape } from "@/types/api";
+import { IWebApiContext, IWebApiDefinded } from "@/types/api";
 import * as path from "path"
 import debug from "debug";
 import { toUCamelize } from "../../util/string-util";

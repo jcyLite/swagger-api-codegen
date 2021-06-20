@@ -6,4 +6,5 @@ export interface IMockConfig{
     dir?:string;
     dataLength?:string;
     fileName?:string;
+    workDir?:string
 }

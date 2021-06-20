@@ -9,7 +9,7 @@
 import { IMethodDefinded } from "../util/swagger";
 import { toLCamelize } from "../../../util/string-util";
 import RequestParameter from "./request-parameter";
-import { SchemaProps } from "@/typings/api";
+import { SchemaProps } from "@/types/api";
 import { toUCamelize } from "../util/string-util";
 
 export type MethodName = "POST" | "GET" | "UPDATE" | "DELETE" | "OPTIONS";

@@ -6,13 +6,8 @@ import { normalizeSwagger } from 'swagger-client/lib/helpers';
 import { ACCEPT_HEADER_VALUE_FOR_DOCUMENTS } from 'swagger-client/lib/constants';
 import { loadJson } from "../../index";
 export function makeFetchJSON(http) {
-  var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var requestInterceptor = opts.requestInterceptor,
-      responseInterceptor = opts.responseInterceptor; // Set credentials with 'http.withCredentials' value
-
-  var credentials = http.withCredentials ? 'include' : 'same-origin';
   return async function (docPath) {
-    return loadJson(docPath)
+    return loadJson(docPath,process.cwd())
   };
 } // Wipe out the http cache
 

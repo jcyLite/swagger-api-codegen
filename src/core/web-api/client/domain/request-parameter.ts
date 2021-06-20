@@ -1,4 +1,4 @@
-import { SchemaProps } from "@/typings/api";
+import { SchemaProps } from "@/types/api";
 import Method from "./method";
 
 /**
@@ -78,7 +78,7 @@ export default class RequestParameter {
   /**
    * 获取参数定义信息;
    */
-  get jsonSchema() {
+  get jsonSchema():any {
     return this.ast.schema ? this.ast.schema : this.ast;
   }
 
@@ -133,7 +133,7 @@ export default class RequestParameter {
     return this.jsonSchema;
   }
 
-  get schema() {
+  get schema():any {
     return this.ast.schema ? this.ast.schema : this.ast;
   }
 
