@@ -35,6 +35,7 @@ export function toUCamelize(name: string):string {
 }
 //
 export function toLCamelize(name: string):string {
+  if(!name) return ''
   let camelName = toUCamelize(name);
   return camelName[0].toLowerCase() + camelName.substr(1);
 }

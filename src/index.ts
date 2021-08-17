@@ -161,7 +161,7 @@ export class Clis{
  
    if (context.swaggerJson) {
      apiJson = context.swaggerJson;
-     apiGroups = SwaggerCore.SwaggerUtil.transfer(apiJson, errrorMsgDeal);
+     apiGroups = await SwaggerCore.SwaggerUtil.transfer(apiJson, errrorMsgDeal);
      return apiGroups;
    } else {
      if (apiGenConfig.swaggerUrl) {
@@ -170,7 +170,7 @@ export class Clis{
        await hookInstance.swagger2ApiGroup.promise(context);
        if (!context["apiGroups"]) {
          //默认转换规则
-         context["apiGroups"] = SwaggerCore.SwaggerUtil.transfer(
+         context["apiGroups"] =await SwaggerCore.SwaggerUtil.transfer(
            apiJson,
            errrorMsgDeal
          );
@@ -189,7 +189,7 @@ export class Clis{
              apiGroups = apiGroups.concat(
                context.apiGroups
                  ? context.apiGroups
-                 : SwaggerCore.SwaggerUtil.transfer(apiJson, errrorMsgDeal)
+                 :(await SwaggerCore.SwaggerUtil.transfer(apiJson, errrorMsgDeal))
              );
            }
          } catch (err) {

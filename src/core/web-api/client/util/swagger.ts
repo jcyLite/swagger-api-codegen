@@ -8,6 +8,7 @@ import debug from "debug";
 import { toLCamelize } from "../../../util/string-util";
 import RequestParameter from "../domain/request-parameter";
 import Method from "../domain/method";
+import translate from "../google-translate-api";
 import ApiGroup from "../domain/api-group";
 const log = debug("swaggerUtil:");
 export function resSchemaModify(
@@ -236,13 +237,37 @@ function isCheckable(content: string) {
  * @param {ISwaggerApisDocs} apiDocs
  * @returns {ApiGroup[]}
  */
-export function transfer(
+export async function transfer(
   apiDocs: ISwaggerApisDocs,
   onError: OnError = ({ message }) => console.error(message)
-): ApiGroup[] {
+): Promise<ApiGroup[]> {
   //分组;
   let apiGroups: ApiGroup[] = [];
-  let tag2DescMap: { [name: string]: string } = (apiDocs.tags || []).reduce(
+  let _apiDocs = apiDocs
+  const mapper = new Map()
+  for(var index in apiDocs.tags){
+    const item =  apiDocs.tags[index]
+    if(/[\u4e00-\u9fa5]/.test(item.name)){
+      const description=(await translate(item.name,{to:'en'})).text;
+      const name =description.split(' ').join("-")
+      mapper.set(item.name,name)
+      _apiDocs.tags[index] = {
+        name,
+        description:item.description||description
+      }
+    }
+  }
+  _apiDocs.definitions = apiDocs.definitions || {}
+  
+  Object.keys(apiDocs.paths).forEach((item)=>{
+    Object.keys(apiDocs.paths[item]).forEach((_item)=>{
+      _apiDocs.paths[item][_item] = {...apiDocs.paths[item][_item],tags:apiDocs.paths[item][_item].tags.map(item=>mapper.get(item)||item)}
+      if(!_apiDocs.paths[item][_item].operationId){
+        _apiDocs.paths[item][_item].operationId = item.split("/").slice(-1)[0]
+      }  
+    })
+  })
+  let tag2DescMap: { [name: string]: string } = (_apiDocs.tags || []).reduce(
     (acc, next) => {
       acc[next.name] = next.description
         .split(" ")
@@ -253,7 +278,7 @@ export function transfer(
     {}
   );
   let checksContents = [
-    ...Object.keys(apiDocs.definitions),
+    ...Object.keys(_apiDocs.definitions),
     ...Object.values(tag2DescMap),
   ];
 
@@ -266,18 +291,18 @@ export function transfer(
     }
   }
 
-  for (let defName in apiDocs.definitions) {
+  for (let defName in _apiDocs.definitions) {
     try {
-      if (!apiDocs.definitions[defName].title) {
-        apiDocs.definitions[defName].title = defName;
+      if (!_apiDocs.definitions[defName].title) {
+        _apiDocs.definitions[defName].title = defName;
       }
     } catch (err) {}
   }
 
   let temp = {};
   let KeyMap: { [controllerName: string]: ApiGroup } = {};
-  for (let url in apiDocs.paths) {
-    let apiItem: IApiDefinded = apiDocs.paths[url];
+  for (let url in _apiDocs.paths) {
+    let apiItem: IApiDefinded = _apiDocs.paths[url];
 
     let groupKey = "";
 
@@ -299,9 +324,9 @@ export function transfer(
         KeyMap[groupKey] = new ApiGroup({
           name: groupKey,
           serverInfo: {
-            host: apiDocs.host,
-            baseUrl: apiDocs.basePath === "/" ? "" : apiDocs.basePath,
-            ...apiDocs.info,
+            host: _apiDocs.host,
+            baseUrl: _apiDocs.basePath === "/" ? "" : _apiDocs.basePath,
+            ..._apiDocs.info,
           },
         });
       }

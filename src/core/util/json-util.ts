@@ -7,7 +7,7 @@
  **/
 
 import * as generateSchema from "generate-schema";
-import { compile } from "json-schema-to-typescript";
+import { compile } from "../schema-to-type";
 import { IWebApiContext } from "@/types/api";
 import { IJsonTsGenResult, ITsGenResult } from "@/types/util";
 
@@ -70,7 +70,6 @@ export async function genTsFromDefines(
   name = "IgnoreType"
 ): Promise<string> {
   log(`根据jsonSchema中definitions生成ts定义文件`);
-
   try {
     let tsContent = await compile(definitions, name, {
       bannerComment: "",
@@ -86,6 +85,7 @@ export async function genTsFromDefines(
 
     return tsContent;
   } catch (err) {
+    debugger
     console.warn("生成ts出错", err);
     return "";
   }
