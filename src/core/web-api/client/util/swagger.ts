@@ -253,7 +253,7 @@ export async function transfer(
       mapper.set(item.name,name)
       _apiDocs.tags[index] = {
         name,
-        description:item.description||description
+        description:item.description||(description+' controller')
       }
     }
   }
