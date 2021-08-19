@@ -103,7 +103,7 @@ export async function buildWebApi(context: IWebApiContext): Promise<string> {
 
       return conent;
     },
-    { saveFilePath: webapiGroup.name + "."+fileType}
+    { saveFilePath: webapiGroup.name + "."+(fileType||'ts')}
   );
 
   return apiPath;

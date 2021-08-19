@@ -6,7 +6,6 @@ import {
 } from "@/types/api";
 import debug from "debug";
 import { toLCamelize } from "../../../util/string-util";
-import RequestParameter from "../domain/request-parameter";
 import Method from "../domain/method";
 import translate from "../google-translate-api";
 import ApiGroup from "../domain/api-group";
@@ -247,13 +246,21 @@ export async function transfer(
   const mapper = new Map()
   for(var index in apiDocs.tags){
     const item =  apiDocs.tags[index]
-    if(/[\u4e00-\u9fa5]/.test(item.name)){
-      const description=(await translate(item.name,{to:'en'})).text;
+    if(!item.name){
+      console.log("检测到tags中不存在name字段，终止后续操作")
+    }
+    if(!item.description){
+      console.log("检测到tags中description为null,将name赋值给description")
+      item.description = item.name
+    }
+    if(/[\u4e00-\u9fa5]/.test(item.description)){
+      console.log("检测到tags含有中文，正使用google翻译转换")
+      const description=(await translate(item.description,{to:'en'})).text;
       const name =description.split(' ').join("-")
       mapper.set(item.name,name)
       _apiDocs.tags[index] = {
         name,
-        description:item.description||(description+' controller')
+        description:description+' controller'
       }
     }
   }
