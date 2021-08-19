@@ -73,6 +73,12 @@ export class Clis{
       async fetch(){
         await genTpl(config,"fetch.ts.ejs","fetch.ts", _this.workDir)
       },
+      async tmsApi(){
+        await genApi({
+          workDir: _this.workDir,
+          config: {...config.api,swaggerUrl:config.swaggerUrl,swaggerUrls:config.swaggerUrls},
+        });
+      },
       async api(){
         await genApi({
           workDir: _this.workDir,
@@ -341,7 +347,7 @@ export class Clis{
      }
    }
    await hookInstance.afterCompile.call(apiGroups, context);
- 
+   
    let apiIndexFilePath = join(apiDir, "index.ts");
    if (!fse.pathExistsSync(apiIndexFilePath)) {
      console.log("create: 创建文件" + apiIndexFilePath);

@@ -11,16 +11,14 @@ import { join } from "path";
 import { getHandleFile } from "../../util/compile-util";
 import * as stringUtil from "../../util/string-util";
 import { genTsFromDefines } from "../../util/json-util";
-import { IParamShape } from "@/types/api";
 import { IWebApiContext, IWebApiDefinded } from "@/types/api";
-import * as path from "path"
+import * as fse from "fs-extra"
 import debug from "debug";
+import * as path from "path"
 import { toUCamelize } from "../../util/string-util";
 import RequestParameter from "./domain/request-parameter";
 const log = debug("web-api:");
 
-//TODO 参数是file类型的处理
-//TODO 类型生成重复的问题?
 
 const Util = {
   ...stringUtil,
@@ -80,7 +78,7 @@ export async function buildWebApi(context: IWebApiContext): Promise<string> {
   let fileHandle = getHandleFile({
     context,
     outDir: projectPath,
-    tplBase: join(__dirname, "tpl"),
+    tplBase: "",
   });
   //生成 方法入参入出参的ts定义;
   if (context.beforeCompile) {
@@ -89,11 +87,13 @@ export async function buildWebApi(context: IWebApiContext): Promise<string> {
       webapiGroup.apis[i] = await context.beforeCompile(apiItem);
     }
   }
-
+  let config = await fse.readJSON(path.join(process.cwd(),'swaggerConfig.json'))
+  let fileType = config?.api.fileType;
+  let apiTplDir = config?.api?.tpl?`${path.resolve(process.cwd(),config.api.tpl)}`:path.join(__dirname, "../../../../tpl/api.ts.ejs")
   let tsDefinded = await generateTsDefined(context);
   //本项目公共的ts定义;
   let apiPath = await fileHandle(
-    "../../../../../tpl/api.ts.ejs",
+    apiTplDir,
     async (tplConent) => {
       let conent: string = ejs.render(tplConent, {
         Util,
@@ -103,7 +103,7 @@ export async function buildWebApi(context: IWebApiContext): Promise<string> {
 
       return conent;
     },
-    { saveFilePath: webapiGroup.name + ".ts" }
+    { saveFilePath: webapiGroup.name + "."+fileType}
   );
 
   return apiPath;
