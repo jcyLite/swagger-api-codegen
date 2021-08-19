@@ -9,6 +9,7 @@ import { toLCamelize } from "../../../util/string-util";
 import Method from "../domain/method";
 import translate from "../google-translate-api";
 import ApiGroup from "../domain/api-group";
+import chalk = require("chalk");
 const log = debug("swaggerUtil:");
 export function resSchemaModify(
   schema: SchemaProps,
@@ -247,14 +248,14 @@ export async function transfer(
   for(var index in apiDocs.tags){
     const item =  apiDocs.tags[index]
     if(!item.name){
-      console.log("检测到tags中不存在name字段，终止后续操作")
+      console.log(chalk.yellow("检测到tags中不存在name字段，终止后续操作"))
     }
     if(!item.description){
-      console.log("检测到tags中description为null,将name赋值给description")
+      console.log(chalk.yellow("检测到tags中description为null,将name赋值给description"))
       item.description = item.name
     }
     if(/[\u4e00-\u9fa5]/.test(item.description)){
-      console.log("检测到tags含有中文，正使用google翻译转换")
+      console.log(chalk.yellow("检测到tags含有中文，正使用google翻译转换"))
       const description=(await translate(item.description,{to:'en'})).text;
       const name =description.split(' ').join("-")
       mapper.set(item.name,name)
