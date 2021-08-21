@@ -4,13 +4,12 @@ import {
   IWebApiDefinded,
   SchemaProps,
 } from "@/types/api";
-import debug from "debug";
 import { toLCamelize } from "../../../util/string-util";
 import Method from "../domain/method";
 import translate from "../google-translate-api";
 import ApiGroup from "../domain/api-group";
 import chalk = require("chalk");
-const log = debug("swaggerUtil:");
+import { camelCase } from "lodash";
 export function resSchemaModify(
   schema: SchemaProps,
   apiItem: IWebApiDefinded,
@@ -272,7 +271,7 @@ export async function transfer(
     Object.keys(apiDocs.paths[item]).forEach((_item)=>{
       _apiDocs.paths[item][_item] = {...apiDocs.paths[item][_item],tags:apiDocs.paths[item][_item].tags.map(item=>mapper.get(item)||item)}
       if(!_apiDocs.paths[item][_item].operationId){
-        _apiDocs.paths[item][_item].operationId = item.split("/").slice(-1)[0]
+        _apiDocs.paths[item][_item].operationId = camelCase(item.split("/").slice(-2).join(' '))
       }  
     })
   })
