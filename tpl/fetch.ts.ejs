@@ -1,13 +1,4 @@
 import request from '@/services';
-
-/**
- * 是否是字符串
- * @param param
- */
-function isString(param: any) {
-  return Object.prototype.toString.call(param) === '[object String]';
-}
-
 /**
  * 是否是空对象
  * @param param
@@ -16,13 +7,6 @@ function isEmpty(param: any) {
   return !Object.keys(param).length;
 }
 
-// /**
-//  * 是否是空对象
-//  * @param param
-//  */
-// function isPlainParam(param: any) {
-//   return !Object.keys(param).length
-// }
 
 /**
  * 拼装完整host
@@ -38,8 +22,7 @@ interface IFetch {
   params?: Object;
   contentType?: string;
 }
-
-async function Common<T = object>(arg: IFetch){
+export async function fetch<T = object>(arg: IFetch) {
   let { host = '', url, data, params, method } = arg;
   let methodUrl = host + url;
   url = methodUrl;
@@ -57,10 +40,6 @@ async function Common<T = object>(arg: IFetch){
     // console.error(e)
     throw e;
   }
-}
-
-export function fetch<T = object>(params: IFetch) {
-  return Common<T>(params);
 }
 
 // let host = config.host || 'http://118.31.238.229:8390';

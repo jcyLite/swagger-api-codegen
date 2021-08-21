@@ -245,6 +245,7 @@ export async function transfer(
   let apiGroups: ApiGroup[] = [];
   let _apiDocs = apiDocs
   const mapper = new Map()
+  /** 检查tags中的name description是否都存在 */
   for(var index in apiDocs.tags){
     const item =  apiDocs.tags[index]
     if(!item.name){
@@ -266,7 +267,7 @@ export async function transfer(
     }
   }
   _apiDocs.definitions = apiDocs.definitions || {}
-  
+  /** operationId 不存在的情况处理 */
   Object.keys(apiDocs.paths).forEach((item)=>{
     Object.keys(apiDocs.paths[item]).forEach((_item)=>{
       _apiDocs.paths[item][_item] = {...apiDocs.paths[item][_item],tags:apiDocs.paths[item][_item].tags.map(item=>mapper.get(item)||item)}

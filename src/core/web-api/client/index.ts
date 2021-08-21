@@ -88,7 +88,7 @@ export async function buildWebApi(context: IWebApiContext): Promise<string> {
     }
   }
   let config = await fse.readJSON(path.join(process.cwd(),'swaggerConfig.json'))
-  let fileType = config?.api.fileType;
+  /** 自定义模板路径 */
   let apiTplDir = config?.api?.tpl?`${path.resolve(process.cwd(),config.api.tpl)}`:path.join(__dirname, "../../../../tpl/api.ts.ejs")
   let tsDefinded = await generateTsDefined(context);
   //本项目公共的ts定义;
@@ -103,7 +103,7 @@ export async function buildWebApi(context: IWebApiContext): Promise<string> {
 
       return conent;
     },
-    { saveFilePath: webapiGroup.name + "."+(fileType||'ts')}
+    { saveFilePath: webapiGroup.name + ".ts"}
   );
 
   return apiPath;
