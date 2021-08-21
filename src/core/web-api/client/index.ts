@@ -163,14 +163,6 @@ async function generateTsDefined(context: IWebApiContext): Promise<string> {
     let item = param2RespTypes[i];
     context.webapiGroup.definitions[item.title||'Unknown'] = item;
   }
-  // Object.keys(context.webapiGroup.definitions).forEach(item=>{
-  //   if((context.webapiGroup.definitions[item] as any)?.properties?.code?.title == '10000'){
-      
-  //     delete (context.webapiGroup.definitions[item] as any).properties.code 
-  //     delete (context.webapiGroup.definitions[item] as any).properties.data 
-  //     delete (context.webapiGroup.definitions[item] as any).properties.success
-  //   }
-  // })
   delete context.webapiGroup.definitions['undefined']
   let content = await genTsFromDefines({
     definitions: context.webapiGroup.definitions,

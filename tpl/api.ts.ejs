@@ -1,25 +1,19 @@
-import sdk from "./fetch";
+import request from "./fetch";
 import serverInfo from "./serverInfo";
 const controllerName = "<%-webapiGroup.name %>";
-
 <% webapiGroup.apis.forEach(apiItem=>{ %>
-
-/**
-*
-* <%=apiItem.comment%>
-*
-*/
+/** <%=apiItem.comment%> */
 async function <%=apiItem.tplGetMethodName()%>(
 <%- apiItem.tplGetRequestParamContent() %>
 ):Promise< <%= apiItem.tplGetResponseInterfaceName() %>> {
-
-  const result = await sdk.<%=apiItem.tplGetMethodType()%>
-  <%-apiItem.responseSchema? "<"+Util.getTypeNameFromSchema(apiItem.responseSchema) +">":""%>(
-  <%-apiItem.tplGetUrl()%>,
-  <%-apiItem.tplGetBodyParam()%> ,
-  <%-apiItem.tplGetQueryParam()%>,
-  {...serverInfo,controllerName}
-  );
+  const result = await request
+  <%-apiItem.responseSchema? "<"+Util.getTypeNameFromSchema(apiItem.responseSchema) +">":""%>({
+    method:"<%=apiItem.tplGetMethodType()%>",
+    url:<%-apiItem.tplGetUrl()%>,
+    data:<%-apiItem.tplGetBodyParam()%> ,
+    params:<%-apiItem.tplGetQueryParam()%>,
+    ...serverInfo,controllerName
+  });
   return result;
   }
   <% }) %>

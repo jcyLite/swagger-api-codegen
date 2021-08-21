@@ -47,13 +47,7 @@ export async function genTsFromSchema(
 ): Promise<ITsGenResult> {
   log(`根据jsonSchema生成ts定义文件`);
   let tsContent = await compile(jsonSchema, name, {
-    bannerComment: "",
-    // unreachableDefinitions:true,
-    // $refOptions:{
-    //   parse:{
-    //     definitions:parse
-    //   }
-    // }
+    bannerComment: ""
   });
 
   let result = {

@@ -1,145 +1,42 @@
-import request from '@/services';
-/**
- * 是否是空对象
- * @param param
- */
+// TODO: 这里可以修改axios为你的request实例
+import request from 'axios';
 function isEmpty(param: any) {
   return !Object.keys(param).length;
 }
-
-
-/**
- * 拼装完整host
- * @param host
- * @param input
- */
-
+type Method = 'get'|'delete'|'head'|'options'|'post'|'put'|'patch'|'purge'| 'link'|'unlink'
 interface IFetch {
+  /** url前缀 */
   host: string;
+  /** url相对路径 */
   url: string;
-  method?: string;
+  /** 方法 */
+  method?: Method;
+  /** body参数 */
   data?: Object;
+  /** url后的参数 */
   params?: Object;
-  contentType?: string;
+  /** 所属controller名称 */
+  controllerName?: string;
 }
 export async function fetch<T = object>(arg: IFetch) {
   let { host = '', url, data, params, method } = arg;
   let methodUrl = host + url;
   url = methodUrl;
   let options: any = {
-    method,
+    method,url
   };
   isEmpty(data) || (options.data = data);
   isEmpty(params) || (options.params = params);
   try {
-    let res = await request(url, options);
+    let res = await request(options);
     return res<%= config.api.wrapper?(`.${config.api.wrapper}`):"" %> as T;
   } catch (e) {
     //@ts-ignore
     window.Raven && window.Raven.captureException(e);
-    // console.error(e)
     throw e;
   }
 }
-
-// let host = config.host || 'http://118.31.238.229:8390';
-let host = '';
-export default {
-    get<T = any>(
-        url: string,
-        data: object,
-        params: object,
-        option: any = { host },
-    ) {
-        //TODO 把当前的权限 记录下来.
-        return fetch<T>({
-            host: option.host,
-            url,
-            data,
-            params,
-            method: 'get',
-        });
-    },
-    patch<T = any>(
-        url: string,
-        data: object,
-        option: any = { host },
-    ) {
-        //TODO 把当前的权限 记录下来.
-        return fetch<T>({
-          host: option.host,
-          url,
-          method: 'patch',
-        });
-    },
-    head<T = any>(
-        url: string,
-        data: object,
-        option: any = { host },
-      ) {
-        //TODO 把当前的权限 记录下来.
-        return fetch<T>({
-          host: option.host,
-          url,
-          method: 'head',
-        });
-      },
-      put<T = any>(
-        url: string,
-        data: object,
-        params: object,
-        option: any = { host },
-      ) {
-        return fetch<T>({
-          host: option.host,
-          url,
-          method: 'put',
-          data,
-          params,
-        });
-      },
-      post<T = any>(
-        url: string,
-        data: object,
-        params: object,
-        option: any = { host },
-      ) {
-        return fetch<T>({
-          host: option.host,
-          url,
-          method: 'post',
-          data,
-          params,
-        });
-      },
-      options<T = any>(
-        url: string,
-        data: object,
-        params: object,
-        option: any = { host },
-      ) {
-        return fetch<T>({
-          host: option.host,
-          url,
-          method: 'options',
-          data,
-        });
-      },
-      delete<T = any>(
-        url: string,
-        data: object,
-        params: object,
-        option: any = { host },
-      ) {
-        return fetch<T>({
-          host: option.host,
-          url,
-          method: 'delete',
-          data,
-        });
-      }
-
-}
+export default fetch
 
 
 

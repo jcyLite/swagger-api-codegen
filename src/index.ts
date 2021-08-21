@@ -73,17 +73,17 @@ export class Clis{
       async fetch(){
         await genTpl(config,"fetch.ts.ejs","fetch.ts", _this.workDir)
       },
-      async tmsApi(){
-        await genApi({
-          workDir: _this.workDir,
-          config: {...config.api,swaggerUrl:config.swaggerUrl,swaggerUrls:config.swaggerUrls},
-        });
-      },
       async api(){
         await genApi({
           workDir: _this.workDir,
           config: {...config.api,swaggerUrl:config.swaggerUrl,swaggerUrls:config.swaggerUrls},
         });
+        if(!fse.existsSync(path.resolve(_this.workDir,config.api.dir,'fetch.ts'))){
+          this.fetch()
+        }
+        if(!fse.existsSync(path.resolve(_this.workDir,config.api.dir,'serverInfo.ts'))){
+          this.serverInfo()
+        }
       },
       async serverInfo(){
         await genTpl(config,"serverInfo.ts.ejs","serverInfo.ts", _this.workDir)

@@ -322,7 +322,7 @@ function generateInterface(ast: TInterface, options: Options): string {
 }
 
 function generateComment(comment: string): string {
-  return ['/**', ...comment.split('\n').map(_ => ' * ' + _), ' */'].join('\n')
+  return ['/**', ...comment.split('\n').map(_ => ' ' + _), ' */'].join(' ')
 }
 
 function generateStandaloneEnum(ast: TEnum, options: Options): string {

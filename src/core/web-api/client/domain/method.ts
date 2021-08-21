@@ -135,7 +135,7 @@ export default class Method {
           if (item.isBasicType()) {
             typeStr = item.getBasicTsType();
           }
-          return `${item.comment ? "\n/** " + item.comment + " */\n" : ""}
+          return `${item.comment ? "/** " + item.comment + " */\n" : ""}
           '${item.name}'${item.isRequired ? "" : "?"}:${typeStr}`;
         })
         .join(";");
