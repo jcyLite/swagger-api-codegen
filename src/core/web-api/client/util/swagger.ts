@@ -232,19 +232,19 @@ function isCheckable(content: string) {
   return nameCheckReg.test(content);
 }
 /** 创建在26个字母中的charCode */
-function createEnCharCode(len){
+function createChar(len:number){
   if(len>=26){
     len -= 26;
-    return createEnCharCode(len)
+    return String.fromCharCode(90)+createChar(len)
   }else{
-    return len
+    return String.fromCharCode(len+65)
   }
 }
 /** 创建ids中不存在的id */
 function genNoRepeatID(ids:string[],id:string):string{
   if(ids.includes(id)){
-    let len = createEnCharCode(ids.length)
-    return genNoRepeatID(ids,id+String.fromCharCode(len+65))
+    let str = createChar(ids.length)
+    return genNoRepeatID(ids,id+str)
   }else{
     return id
   }
