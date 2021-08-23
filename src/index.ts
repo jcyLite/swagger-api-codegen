@@ -77,13 +77,7 @@ export class Clis{
         await genApi({
           workDir: _this.workDir,
           config: {...config.api,swaggerUrl:config.swaggerUrl,swaggerUrls:config.swaggerUrls},
-        });
-        if(!fse.existsSync(path.resolve(_this.workDir,config.api.dir,'fetch.ts'))){
-          this.fetch()
-        }
-        if(!fse.existsSync(path.resolve(_this.workDir,config.api.dir,'serverInfo.ts'))){
-          this.serverInfo()
-        }
+        })
       },
       async serverInfo(){
         await genTpl(config,"serverInfo.ts.ejs","serverInfo.ts", _this.workDir)

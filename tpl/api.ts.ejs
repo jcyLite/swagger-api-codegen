@@ -1,20 +1,18 @@
 import request from "./fetch";
-import serverInfo from "./serverInfo";
 const controllerName = "<%-webapiGroup.name %>";
 <% webapiGroup.apis.forEach(apiItem=>{ %>
 /** <%=apiItem.comment%> */
 async function <%=apiItem.tplGetMethodName()%>(
 <%- apiItem.tplGetRequestParamContent() %>
 ):Promise< <%= apiItem.tplGetResponseInterfaceName() %>> {
-  const result = await request
+  return await request
   <%-apiItem.responseSchema? "<"+Util.getTypeNameFromSchema(apiItem.responseSchema) +">":""%>({
     method:"<%=apiItem.tplGetMethodType()%>",
     url:<%-apiItem.tplGetUrl()%>,
     data:<%-apiItem.tplGetBodyParam()%> ,
     params:<%-apiItem.tplGetQueryParam()%>,
-    ...serverInfo,controllerName
+    controllerName
   });
-  return result;
   }
   <% }) %>
 

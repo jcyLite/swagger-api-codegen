@@ -145,7 +145,7 @@ export default class Method {
   }
 
   tplGetUrl(): string {
-    return `serverInfo.baseUrl+\`${this.url.replace(/{/g, "${param.")}\``;
+    return `\`${this.url.replace(/{/g, "${param.")}\``;
   }
 
   tplGetBodyParam(): string {
