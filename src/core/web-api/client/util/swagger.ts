@@ -231,10 +231,20 @@ const nameCheckReg = /^[0-9a-zA-Z_\-«» ]*$/;
 function isCheckable(content: string) {
   return nameCheckReg.test(content);
 }
+/** 创建在26个字母中的charCode */
+function createEnCharCode(len){
+  if(len>=26){
+    len -= 26;
+    return createEnCharCode(len)
+  }else{
+    return len
+  }
+}
 /** 创建ids中不存在的id */
 function genNoRepeatID(ids:string[],id:string):string{
   if(ids.includes(id)){
-    return genNoRepeatID(ids,id+String.fromCharCode(ids.length+65))
+    let len = createEnCharCode(ids.length)
+    return genNoRepeatID(ids,id+String.fromCharCode(len+65))
   }else{
     return id
   }
@@ -276,7 +286,6 @@ export async function transfer(
   _apiDocs.definitions = apiDocs.definitions || {}
   /** operationId 不存在的情况处理 */
   const operationIds = [];
-  
   Object.keys(apiDocs.paths).forEach((item)=>{
     Object.keys(apiDocs.paths[item]).forEach((_item)=>{
       _apiDocs.paths[item][_item] = {...apiDocs.paths[item][_item],tags:apiDocs.paths[item][_item].tags.map(item=>mapper.get(item)||item)}
