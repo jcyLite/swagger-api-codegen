@@ -79,9 +79,6 @@ export class Clis{
           config: {...config.api,swaggerUrl:config.swaggerUrl,swaggerUrls:config.swaggerUrls},
         })
       },
-      async serverInfo(){
-        await genTpl(config,"serverInfo.ts.ejs","serverInfo.ts", _this.workDir)
-      },
       async mock(){
         synchronizeSwagger.init({...config.mock,url:config.swaggerUrl,workDir:_this.workDir}).then((item:any) => {
           if (item.state === 'success') {
