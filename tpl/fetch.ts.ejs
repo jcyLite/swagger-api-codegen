@@ -17,7 +17,7 @@ interface IFetch {
   controllerName?: string;
 }
 export async function fetch<T = object>(arg: IFetch) {
-  let { url, data, params, method } = arg;
+  let { url, data = {}, params = {}, method } = arg;
   let options: any = {
     method,url
   };
