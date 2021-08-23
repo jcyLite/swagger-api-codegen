@@ -231,6 +231,14 @@ const nameCheckReg = /^[0-9a-zA-Z_\-«» ]*$/;
 function isCheckable(content: string) {
   return nameCheckReg.test(content);
 }
+/** 创建ids中不存在的id */
+function genNoRepeatID(ids:string[],id:string):string{
+  if(ids.includes(id)){
+    return genNoRepeatID(ids,id+String.fromCharCode(ids.length+65))
+  }else{
+    return id
+  }
+}
 /**
  * 转换项目
  * @param {ISwaggerApisDocs} apiDocs
@@ -267,11 +275,16 @@ export async function transfer(
   }
   _apiDocs.definitions = apiDocs.definitions || {}
   /** operationId 不存在的情况处理 */
+  const operationIds = [];
+  
   Object.keys(apiDocs.paths).forEach((item)=>{
     Object.keys(apiDocs.paths[item]).forEach((_item)=>{
       _apiDocs.paths[item][_item] = {...apiDocs.paths[item][_item],tags:apiDocs.paths[item][_item].tags.map(item=>mapper.get(item)||item)}
       if(!_apiDocs.paths[item][_item].operationId){
-        _apiDocs.paths[item][_item].operationId = camelCase(item.split("/").slice(-2).join(' '))
+        /** 优先使用ur最后两个作为operationId */
+        let operationId =  genNoRepeatID(operationIds,camelCase(item.split("/").slice(-2).join(' ')));
+        _apiDocs.paths[item][_item].operationId = operationId
+        operationIds.push(operationId);
       }  
     })
   })
