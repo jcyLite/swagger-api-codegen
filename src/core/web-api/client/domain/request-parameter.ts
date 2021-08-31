@@ -93,7 +93,6 @@ export default class RequestParameter {
    * 判断参数类型是不是基本类型; string int number 等;
    */
   isBasicType(): boolean {
-    // TODO dong 2020/5/12 这里有一个判断的逻辑在.
     if (this.basicTypesMap[this.ast.type]) {
       return true;
     } else if (this.ast.type === "array") {

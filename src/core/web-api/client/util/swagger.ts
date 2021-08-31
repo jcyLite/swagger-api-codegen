@@ -232,7 +232,7 @@ function isCheckable(content: string) {
   return nameCheckReg.test(content);
 }
 /** 创建在26个字母中的charCode */
-function createChar(len:number){
+function createChar(len:number):string{
   if(len>=26){
     len -= 26;
     return String.fromCharCode(90)+createChar(len)
@@ -241,10 +241,15 @@ function createChar(len:number){
   }
 }
 /** 创建ids中不存在的id */
-function genNoRepeatID(ids:string[],id:string):string{
+function genNoRepeatID(ids:string[],id:string,method:string):string{
   if(ids.includes(id)){
-    let str = createChar(ids.length)
-    return genNoRepeatID(ids,id+str)
+    let methodId = camelCase(method+' '+id)
+    if(ids.includes(methodId)){
+      let str = createChar(ids.length)
+      return genNoRepeatID(ids,id+str,method)
+    }else{
+      return methodId
+    }
   }else{
     return id
   }
@@ -263,7 +268,7 @@ export async function transfer(
   let _apiDocs = apiDocs
   const mapper = new Map()
   /** 检查tags中的name description是否都存在 */
-  for(var index in apiDocs.tags){
+  for(let index in apiDocs.tags){
     const item =  apiDocs.tags[index]
     if(!item.name){
       console.log(chalk.yellow("检测到tags中不存在name字段，终止后续操作"))
@@ -274,7 +279,13 @@ export async function transfer(
     }
     if(/[\u4e00-\u9fa5]/.test(item.description)){
       console.log(chalk.yellow("检测到tags含有中文，正使用google翻译转换"))
-      const description=(await translate(item.description,{to:'en'})).text;
+      try{
+        var description=(await translate(item.description,{to:'en'})).text;
+      }catch(err){
+        console.warn(chalk.yellow("使用谷歌翻译发生错误，请检查是否超过今日最大请求次数，下面将使用随机翻译"))
+        var description = createChar(Number(index)+50)
+      }
+      
       const name =description.split(' ').join("-")
       mapper.set(item.name,name)
       _apiDocs.tags[index] = {
@@ -291,7 +302,7 @@ export async function transfer(
       _apiDocs.paths[item][_item] = {...apiDocs.paths[item][_item],tags:apiDocs.paths[item][_item].tags.map(item=>mapper.get(item)||item)}
       if(!_apiDocs.paths[item][_item].operationId){
         /** 优先使用ur最后两个作为operationId */
-        let operationId =  genNoRepeatID(operationIds,camelCase(item.split("/").slice(-2).join(' ')));
+        let operationId =  genNoRepeatID(operationIds,camelCase(item.split("/").slice(-2).join(' ')),_item);
         _apiDocs.paths[item][_item].operationId = operationId
         operationIds.push(operationId);
       }  
