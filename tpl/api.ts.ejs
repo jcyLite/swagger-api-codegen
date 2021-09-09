@@ -1,4 +1,4 @@
-import request from "./fetch";
+import request from "<%- config.requestDir||"./fetch" %>";
 const controllerName = "<%-webapiGroup.name %>";
 <% webapiGroup.apis.forEach(apiItem=>{ %>
 /** <%=apiItem.comment%> */

@@ -22,15 +22,35 @@
  import * as chalk from "chalk"
  import { IFileSaveOptions } from "./types/page";
  import { IInsertOption } from "./types/util";
- import { IConfig } from "./types/config";
- import { createSwaggerConfig, loadMoonConfig } from "./util/config";
+ import { IBaseConfig, IConfig } from "./types/config";
+ import { createSwaggerConfig, loadConfig } from "./util/config";
  import { applyHook } from "./util/hook-util";
  import * as path from "path"
+ import {execSync} from 'child_process'
  import * as express from "express"
  import ApiGroup from "./core/web-api/client/domain/api-group";
 import { getFreePort } from "./util/getFreePort";
 import { genTpl } from "./util/genTpl";
 import { synchronizeSwagger } from "./mock";
+async function arrayHander(config:IConfig,cb:(config:IBaseConfig)=>Promise<any>){
+  try{
+    if(!config.apiGroup){
+      await cb(config)
+    }else{
+      for(let item of config.apiGroup){
+        /** 处理path */
+        if(!item.type&&(config.type)){
+          item.type = config.type
+        }
+        item.api.dir = path.join((config.apiBaseDir||''),item.api.dir)
+        item.swaggerUrl = path.join((config.swaggerUrlBaseDir||''),item.swaggerUrl)
+        await cb(item)
+      }
+    }
+  }catch(err){
+    throw Error('请检查swaggerConfig.json配置')
+  }
+}
 export class Clis{
   workDir = process.cwd();
   public config:IConfig = null;
@@ -42,7 +62,10 @@ export class Clis{
   }
   async view(){
     const _this = this;
-    let config = (await loadMoonConfig(this.workDir)) as IConfig;
+    let config = (await loadConfig(this.workDir));
+    if(config.apiGroup){
+       throw Error("查看swagger文档暂不支持数组配置")
+    }
     this.config = config;
     return ({
       api(){
@@ -67,25 +90,52 @@ export class Clis{
   }
   async generate(){
     let _this = this;
-    let config = (await loadMoonConfig(this.workDir)) as IConfig;
+    let config = await loadConfig(this.workDir)
     this.config = config;
     return ({
       async fetch(){
-        await genTpl(config,"fetch.ts.ejs","fetch.ts", _this.workDir)
+        await arrayHander(config,async (config)=>{
+          await genTpl(config ,"fetch.ts.ejs","fetch.ts", _this.workDir)
+        })
       },
       async api(){
-        await genApi({
-          workDir: _this.workDir,
-          config: {...config.api,swaggerUrl:config.swaggerUrl,swaggerUrls:config.swaggerUrls},
+        await arrayHander(config,async (config)=>{
+          await genApi({
+            workDir: _this.workDir,
+            config: {...config.api,swaggerUrl:config.swaggerUrl,swaggerUrls:config.swaggerUrls},
+          })
+          if(config.type == 'js'){
+            console.log(chalk.yellow("info")+' 检测到配置中type值为js，正在使用tsc进行编译')
+            const baseDir = path.join(_this.workDir,config.api.dir)
+            let res = fse.readdirSync(path.join(_this.workDir,config.api.dir))
+            res.forEach(item=>{
+              const a = item.split('.')
+              const fileType = a[a.length-1];
+              const isDeclaration = a[a.length - 2] == 'd'
+              if(fileType=='ts'&&(!isDeclaration)){
+                try{
+                  execSync(`tsc ${path.join(baseDir,item)} --declaration --declarationDir "${baseDir}" --moduleResolution "node" --target "esnext" --module "esnext"`,{stdio: 'inherit'})
+                }catch(err){
+                  console.log(chalk.red(`fail`)+` 编译失败，请检查是否全局安装typescript`)
+                }
+                console.log(chalk.green(`success`)+` 成功编译文件 ${item}`)
+                fse.removeSync(path.join(baseDir,item))
+                console.log(chalk.green(`success`)+`已删除原文件`)
+              }
+            })
+            // execSync(`tsc --declaration`,{stdio: 'inherit'})
+          }
         })
       },
       async mock(){
-        synchronizeSwagger.init({...config.mock,url:config.swaggerUrl,workDir:_this.workDir}).then((item:any) => {
-          if (item.state === 'success') {
-            console.log(chalk.green('生成mock成功！'))
-          }
-        }).catch((err:any) => {
-          console.log(chalk.red('生成mock失败！'))
+        await arrayHander(config,async (config)=>{
+          synchronizeSwagger.init({...config.mock,url:config.swaggerUrl,workDir:_this.workDir}).then((item:any) => {
+            if (item.state === 'success') {
+              console.log(chalk.green('生成mock成功！'))
+            }
+          }).catch((err:any) => {
+            console.log(chalk.red('生成mock失败！'))
+          })
         })
       },
     })

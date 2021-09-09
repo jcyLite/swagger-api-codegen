@@ -65,9 +65,9 @@ export async function createSwaggerConfig(){
     
     await fse.writeFile(join( process.cwd(),"swaggerConfig.json"),formatJSON(options));
 }
-export async function loadMoonConfig(
+export async function loadConfig(
   projectDir = process.cwd()
-): Promise<IConfig | IBackendConfig> {
+): Promise<IConfig> {
   let defaulltMoonConfig: IConfig;
 
   let JSONconfigFilePath = join(projectDir, "swaggerConfig.json");
@@ -77,7 +77,7 @@ export async function loadMoonConfig(
       defaulltMoonConfig = await fse.readJSON(JSONconfigFilePath);
     } else {
       createSwaggerConfig();
-      return loadMoonConfig(projectDir);
+      return loadConfig(projectDir);
     }
   } catch (err) {
     console.error(err);

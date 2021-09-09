@@ -1,6 +1,6 @@
 {
   "name": "swagger-api-codegen",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "make api and mock easier",
   "main": "lib/index.js",
   "typings": "declarations/index.d.ts",
